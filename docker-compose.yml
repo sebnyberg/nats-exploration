@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  nats:
+    image: nats:latest
+    ports:
+      - "4222:4222"
+      - "6222:6222"
+      - "8222:8222"
+    networks:
+      - nats-network
+
+  golang:
+    image: golang:1.21
+    tty: true
+    command: /bin/sh # Start with bash so the container doesn't exit immediately
+    volumes:
+      - .:/go/src/app
+    working_dir: /go/src/app
+    networks:
+      - nats-network
+    depends_on:
+      - nats
+    environment:
+      - GOPATH=/go
+
+networks:
+  nats-network:
+    driver: bridge
