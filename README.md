@@ -26,8 +26,22 @@ nats-server -js
 
 ```bash
 # follow guide and create the new stream
+# name the subject "foo"
 nats stream add my-stream
 
 # print info about the stream
 nats stream info my-stream
+
+# publish test messages to the subject
+nats pub foo --count=1000 --sleep 1s "publication #{{Count}} @ {{TimeStamp}}"
+
+# create a new consumer
+nats consumer add
+
+# subscribe
+nats consumer next my-stream pull-consumer --count 1000
+
+# clean up
+nats consumer rm
+nats stream rm my-stream
 ```
